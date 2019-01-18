@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
+    <title>Document</title>
+
+    <style>
+        .hide{
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1 class="text-center">Simple Ajax demo</h1>
+        </header>
+        <br />
+        <div class="row justify-content-center">
+            <form class="col-6" action="/create" method="POST">
+                <div class="form-group row">
+                    <label class="col-2" for="name">name</label>
+                    <input class="col-10" type="text" id="name" name='name'>
+                </div>
+                <div class="form-group row">
+                    <label class="col-2" for="age">age</label>
+                    <input class="col-10" type="number" id="age" name='age'>
+                </div>
+                <button class="btn btn-primary" id="createbutton">submit</button>
+            </form>
+        </div>
+        <br />
+        <table class="table table-striped">
+            <tr>
+                <td>Name</td>
+                <td>Age</td>
+            </tr>
+            <tbody id="results">
+
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+    </script>
+
+    <script type="text/javascript">
+        document.getElementById("createbutton").addEventListener("click", run);
+
+        function run(e) {
+            e.preventDefault();
+            var data = {
+                name: document.getElementById("name").value,
+                age: document.getElementById("age").value
+            };
+            console.log(data);
+            document.getElementById("name").value = "";
+            document.getElementById("age").value = "";
+
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:3000/create',
+                data: data,
+                dataType: 'application/json',
+                complete: function (data) {
+
+                    const body = JSON.parse(data.responseText)
+                    console.log(body);
+                    var trnode = document.createElement("tr");
+
+                    var tdnode1 = document.createElement("td");
+                    var textnode1 = document.createTextNode(body.name);
+                    tdnode1.appendChild(textnode1);
+
+                    var tdnode2 = document.createElement("td");
+                    var textnode2 = document.createTextNode(body.age);
+                    tdnode2.appendChild(textnode2);
+
+                    trnode.appendChild(tdnode1);
+                    trnode.appendChild(tdnode2);
+
+                    document.getElementById("results").appendChild(trnode);
+                }
+
+            });
+
+
+        }
+    </script>
+</body>
+
+</html>
